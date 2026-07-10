@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sun, Moon, Shield, Menu, X, Trophy, MessageSquare, LogOut, Check } from 'lucide-react';
+import { Sun, Moon, Shield, Menu, X, Trophy, MessageSquare, MessageCircle, LogOut, Check } from 'lucide-react';
 
 export default function Navbar({ 
   activeTab, 
