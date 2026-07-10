@@ -39,7 +39,7 @@ export default function Navbar({
             <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-indigo-600 shadow-[0_0_15px_rgba(16,185,129,0.3)] mr-3 overflow-hidden">
               <Trophy className="w-5 h-5 text-white animate-pulse" />
             </div>
-            <span className="font-extrabold text-xl tracking-tight bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-400 bg-clip-text text-transparent uppercase">
+            <span className="font-display font-semibold text-base tracking-[-0.055em] bg-gradient-to-r from-emerald-500 via-teal-400 to-sky-500 bg-clip-text text-transparent uppercase">
               ФК АВРОРА
             </span>
           </div>

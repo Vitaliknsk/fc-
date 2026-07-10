@@ -53,7 +53,7 @@ export default function Hero({ setActiveTab, nextEvent, onRsvp, players, matches
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="text-4xl sm:text-6xl font-extrabold tracking-tight mb-4 leading-none"
+                className="font-display text-3xl sm:text-5xl font-bold tracking-[-0.055em] mb-5 leading-[1.1]"
               >
                 Футбольный Клуб <br/>
                 <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-400 bg-clip-text text-transparent drop-shadow-sm">
@@ -65,7 +65,7 @@ export default function Hero({ setActiveTab, nextEvent, onRsvp, players, matches
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.2 }}
-                className="text-slate-600 dark:text-slate-350 max-w-xl text-base sm:text-lg mb-8"
+                className="text-slate-600 dark:text-slate-300 max-w-xl text-base sm:text-lg leading-relaxed mb-8"
               >
                 Официальный портал футбольной команды Аврора. Статистика, расписание тренировок и матчей, система учета взносов и интерактивные голосования в одном месте.
               </motion.p>
@@ -97,7 +97,7 @@ export default function Hero({ setActiveTab, nextEvent, onRsvp, players, matches
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6 }}
-              className="lg:col-span-2 bg-slate-900/50 dark:bg-aurora-card/80 border border-slate-200/50 dark:border-slate-800/80 rounded-2xl p-6 shadow-xl relative overflow-hidden"
+              className="lg:col-span-2 bg-slate-950/90 dark:bg-aurora-card border border-slate-200/50 dark:border-slate-700/80 rounded-2xl p-6 shadow-xl relative overflow-hidden"
             >
               <div className="absolute top-0 right-0 bg-indigo-500/10 text-indigo-400 text-xs px-3 py-1 rounded-bl-xl font-bold uppercase border-l border-b border-indigo-500/20">
                 Предстоящий матч
@@ -110,7 +110,7 @@ export default function Hero({ setActiveTab, nextEvent, onRsvp, players, matches
                     <span>{new Date(nextEvent.date).toLocaleString('ru-RU', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}</span>
                   </div>
                   
-                  <h3 className="font-bold text-lg text-slate-150 mb-1 leading-tight">{nextEvent.title}</h3>
+                  <h3 className="font-bold text-lg text-white mb-1 leading-tight">{nextEvent.title}</h3>
                   <div className="flex items-center space-x-1.5 text-slate-400 text-xs mb-6">
                     <MapPin className="w-3.5 h-3.5 text-rose-400" />
                     <span className="truncate">{nextEvent.location}</span>

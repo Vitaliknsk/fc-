@@ -8,9 +8,19 @@ export default {
   theme: {
     extend: {
       colors: {
+        slate: {
+          150: '#edf2f7',
+          250: '#d9e2ec',
+          350: '#a8b7c7',
+          450: '#718096',
+          550: '#526275',
+          650: '#3f4c5f',
+          850: '#162033',
+          855: '#111a2a',
+        },
         aurora: {
-          dark: '#030712', // deep rich black/gray
-          card: '#0b0f19', // slate midnight for card backgrounds
+          dark: '#08111f', // deep navy for the pitch-at-night feel
+          card: '#101c2e', // elevated panel background
           accent: '#10b981', // emerald accent
           neon: '#10b981', // default emerald neon
           green: '#00ff87', // bright neon green
@@ -20,7 +30,8 @@ export default {
         }
       },
       fontFamily: {
-        sans: ['Inter', 'Satoshi', 'Manrope', 'sans-serif'],
+        sans: ['Manrope', 'system-ui', 'sans-serif'],
+        display: ['Unbounded', 'Manrope', 'sans-serif'],
       },
       animation: {
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
