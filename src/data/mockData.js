@@ -7,6 +7,7 @@ export const initialPlayers = [
     number: 10,
     position: "Нападающий",
     avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80",
+    initialBalance: 1500, // Начальный баланс в рублях
     stats: {
       goals: 12,
       assists: 8,
@@ -29,6 +30,7 @@ export const initialPlayers = [
     number: 7,
     position: "Полузащитник",
     avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80",
+    initialBalance: 800,
     stats: {
       goals: 8,
       assists: 11,
@@ -51,6 +53,7 @@ export const initialPlayers = [
     number: 9,
     position: "Нападающий",
     avatar: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=150&auto=format&fit=crop&q=80",
+    initialBalance: -200, // Пример долга
     stats: {
       goals: 10,
       assists: 3,
@@ -73,6 +76,7 @@ export const initialPlayers = [
     number: 8,
     position: "Полузащитник",
     avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
+    initialBalance: 2000,
     stats: {
       goals: 4,
       assists: 7,
@@ -95,6 +99,7 @@ export const initialPlayers = [
     number: 4,
     position: "Защитник",
     avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80",
+    initialBalance: 1200,
     stats: {
       goals: 2,
       assists: 3,
@@ -117,6 +122,7 @@ export const initialPlayers = [
     number: 5,
     position: "Защитник",
     avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&auto=format&fit=crop&q=80",
+    initialBalance: -800, // Пример долга
     stats: {
       goals: 1,
       assists: 2,
@@ -139,6 +145,7 @@ export const initialPlayers = [
     number: 1,
     position: "Вратарь",
     avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&auto=format&fit=crop&q=80",
+    initialBalance: 500,
     stats: {
       goals: 0,
       assists: 1,
@@ -161,6 +168,7 @@ export const initialPlayers = [
     number: 17,
     position: "Полузащитник",
     avatar: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=150&auto=format&fit=crop&q=80",
+    initialBalance: 0,
     stats: {
       goals: 5,
       assists: 4,
@@ -186,7 +194,7 @@ export const initialEvents = [
     date: "2026-07-08T19:30:00",
     type: "training", // training / match
     location: "Арена Металлург, поле 3",
-    cost: 500, // Стоимость участия для расчета взноса
+    cost: 400, // Фиксированное списание за посещение будет 400 руб
     attendance: {
       p1: true,
       p2: true,
@@ -205,7 +213,7 @@ export const initialEvents = [
     date: "2026-07-12T11:00:00",
     type: "match",
     location: "Стадион Локомотив, основное поле",
-    cost: 1000,
+    cost: 400,
     attendance: {
       p1: true,
       p2: true,
@@ -224,7 +232,7 @@ export const initialEvents = [
     date: "2026-07-03T19:30:00",
     type: "training",
     location: "Арена Металлург, поле 3",
-    cost: 500,
+    cost: 400,
     attendance: {
       p1: true,
       p2: true,
@@ -243,7 +251,7 @@ export const initialEvents = [
     date: "2026-06-28T10:00:00",
     type: "match",
     location: "Стадион Локомотив",
-    cost: 1000,
+    cost: 400,
     attendance: {
       p1: true,
       p2: true,

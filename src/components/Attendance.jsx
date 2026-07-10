@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calendar, CheckCircle2, XCircle, Clock, CreditCard, DollarSign, Plus, UserCheck, Shield, ChevronDown, Check, Trash2, ArrowUpRight } from 'lucide-react';
+import { Calendar, CheckCircle2, XCircle, CreditCard, DollarSign, Plus, UserCheck, Shield, ChevronDown, Check, Trash2, ArrowUpRight, MessageCircle, AlertTriangle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Attendance({ 
@@ -11,18 +11,30 @@ export default function Attendance({
   onAddEvent, 
   onAddPayment, 
   onVerifyPayment,
-  onDeleteEvent 
+  onDeleteEvent,
+  onUpdateInitialBalance,
+  onSendTelegramReminder,
+  currentUser
 }) {
-  const [selectedPlayerId, setSelectedPlayerId] = React.useState(players[0]?.id || '');
+  const [selectedPlayerId, setSelectedPlayerId] = React.useState(currentUser?.id || players[0]?.id || '');
   const [newEventTitle, setNewEventTitle] = React.useState('');
   const [newEventDate, setNewEventDate] = React.useState('');
   const [newEventType, setNewEventType] = React.useState('training');
-  const [newEventCost, setNewEventCost] = React.useState(500);
   const [newEventLocation, setNewEventLocation] = React.useState('');
+  
+  // Admin manual balance states
+  const [manualBalanceInput, setManualBalanceInput] = React.useState('');
 
   const [paymentAmount, setPaymentAmount] = React.useState('');
   const [paymentDesc, setPaymentDesc] = React.useState('Взнос на карту');
   
+  // Sync selected player when currentUser changes
+  React.useEffect(() => {
+    if (currentUser) {
+      setSelectedPlayerId(currentUser.id);
+    }
+  }, [currentUser]);
+
   const activePlayer = players.find(p => p.id === selectedPlayerId) || players[0];
 
   // Calculations for active player
@@ -30,11 +42,8 @@ export default function Attendance({
   const attendedEventsCount = playerEvents.filter(e => e.attendance[selectedPlayerId] === true).length;
   const attendanceRate = playerEvents.length > 0 ? Math.round((attendedEventsCount / playerEvents.length) * 100) : 100;
 
-  // Calculate total costs incurred based on attendance
-  // An event costs money if marked as attended. If not attended, it doesn't cost.
-  const totalCostIncurred = events
-    .filter(e => e.completed && e.attendance[selectedPlayerId] === true)
-    .reduce((sum, e) => sum + e.cost, 0);
+  // Deduct 400 rubles per completed event if RSVP is true (present)
+  const totalCostIncurred = playerEvents.filter(e => e.attendance[selectedPlayerId] === true).length * 400;
 
   // Total paid by player
   const verifiedPayments = payments.filter(p => p.playerId === selectedPlayerId && p.type === 'payment' && p.verified);
@@ -42,7 +51,8 @@ export default function Attendance({
   const pendingPayments = payments.filter(p => p.playerId === selectedPlayerId && p.type === 'payment' && !p.verified);
   const totalPending = pendingPayments.reduce((sum, p) => sum + p.amount, 0);
   
-  const balance = totalCostIncurred - totalPaid;
+  const initialBal = activePlayer?.initialBalance || 0;
+  const balance = initialBal - totalCostIncurred + totalPaid;
 
   const handleSubmitPayment = (e) => {
     e.preventDefault();
@@ -54,7 +64,7 @@ export default function Attendance({
       description: paymentDesc,
       date: new Date().toISOString().split('T')[0],
       type: 'payment',
-      verified: false // Admin must verify
+      verified: false
     });
     setPaymentAmount('');
     setPaymentDesc('Взнос на карту');
@@ -68,7 +78,7 @@ export default function Attendance({
       title: newEventTitle,
       date: newEventDate,
       type: newEventType,
-      cost: parseInt(newEventCost),
+      cost: 400, // Fixed 400 RUB
       location: newEventLocation,
       completed: false
     });
@@ -76,6 +86,13 @@ export default function Attendance({
     setNewEventTitle('');
     setNewEventDate('');
     setNewEventLocation('');
+  };
+
+  const handleSaveBalance = (e) => {
+    e.preventDefault();
+    if (!manualBalanceInput || isNaN(manualBalanceInput)) return;
+    onUpdateInitialBalance(selectedPlayerId, parseInt(manualBalanceInput));
+    setManualBalanceInput('');
   };
 
   return (
@@ -107,7 +124,7 @@ export default function Attendance({
         </div>
       </div>
 
-      {/* Main Grid: Player Dashboard */}
+      {/* Main Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
         {/* Left Column: Player Stats & Dues Card */}
         <div className="lg:col-span-1 space-y-6">
@@ -119,44 +136,61 @@ export default function Attendance({
               <img src={activePlayer?.avatar} alt={activePlayer?.name} className="w-12 h-12 rounded-full object-cover border border-slate-200 dark:border-slate-800" />
               <div className="text-left">
                 <p className="font-extrabold text-slate-800 dark:text-white leading-tight">{activePlayer?.name}</p>
-                <p className="text-xs text-slate-400 font-medium">Номер {activePlayer?.number} • {activePlayer?.position}</p>
+                <p className="text-xs text-slate-450 font-medium">Номер {activePlayer?.number} • {activePlayer?.position}</p>
               </div>
             </div>
 
             {/* Financial summary */}
             <div className="space-y-4 border-t border-slate-200 dark:border-slate-800/60 pt-4 text-left">
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-slate-500 dark:text-slate-400 font-semibold">Посещаемость:</span>
-                <span className="text-sm font-black text-emerald-500">{attendanceRate}%</span>
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-slate-500 dark:text-slate-400">Начальный баланс (установлен):</span>
+                <span className="font-bold text-slate-800 dark:text-slate-200">{initialBal} ₽</span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-slate-500 dark:text-slate-400 font-semibold">Начислено за посещения:</span>
-                <span className="text-sm font-bold text-slate-800 dark:text-slate-200">{totalCostIncurred} ₽</span>
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-slate-500 dark:text-slate-400">Списано за посещения ({attendedEventsCount} × 400 ₽):</span>
+                <span className="font-bold text-rose-500">-{totalCostIncurred} ₽</span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-slate-500 dark:text-slate-400 font-semibold">Оплачено:</span>
-                <span className="text-sm font-bold text-slate-850 dark:text-slate-100">{totalPaid} ₽</span>
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-slate-500 dark:text-slate-400">Внесено оплат:</span>
+                <span className="font-bold text-emerald-500">+{totalPaid} ₽</span>
               </div>
-              
+
               {totalPending > 0 && (
-                <div className="flex justify-between items-center text-amber-500">
-                  <span className="text-xs font-semibold">На подтверждении:</span>
-                  <span className="text-xs font-bold">{totalPending} ₽</span>
+                <div className="flex justify-between items-center text-amber-500 text-xs">
+                  <span>Ожидает проверки:</span>
+                  <span>+{totalPending} ₽</span>
                 </div>
               )}
 
-              {/* Debt indicator */}
+              {/* Balance card */}
               <div className={`p-4 rounded-xl mt-4 border flex items-center justify-between ${
-                balance > 0 
-                  ? 'bg-rose-500/10 border-rose-500/20 text-rose-500 dark:text-rose-400' 
-                  : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500 dark:text-emerald-400'
+                balance >= 0 
+                  ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500 dark:text-emerald-450' 
+                  : 'bg-rose-500/10 border-rose-500/20 text-rose-500 dark:text-rose-400'
               }`}>
                 <div>
-                  <p className="text-[10px] uppercase font-bold tracking-wider">Баланс / Долг</p>
-                  <p className="text-xl font-black">{balance > 0 ? `${balance} ₽` : 'Оплачено ✓'}</p>
+                  <p className="text-[10px] uppercase font-bold tracking-wider">Текущий баланс</p>
+                  <p className="text-xl font-black">{balance} ₽</p>
                 </div>
                 <CreditCard className="w-6 h-6 opacity-80" />
               </div>
+
+              {/* Debt alert & Telegram reminder button */}
+              {balance < 0 && (
+                <div className="mt-4 p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-500">
+                  <div className="flex items-start space-x-2 mb-2">
+                    <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                    <p className="text-[11px] font-semibold leading-relaxed">Внимание! У игрока отрицательный баланс.</p>
+                  </div>
+                  <button
+                    onClick={() => onSendTelegramReminder(activePlayer, balance)}
+                    className="w-full py-1.5 bg-sky-500 hover:bg-sky-600 text-white rounded-lg text-xs font-bold transition-all flex items-center justify-center space-x-1"
+                  >
+                    <MessageCircle className="w-3.5 h-3.5 fill-current" />
+                    <span>Напомнить в TG</span>
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
@@ -173,7 +207,7 @@ export default function Attendance({
                     onChange={(e) => setPaymentAmount(e.target.value)}
                     placeholder="Пример: 1500"
                     required
-                    className="w-full px-3 py-2 bg-slate-100 dark:bg-slate-850 border border-slate-200/50 dark:border-slate-800 rounded-lg text-sm text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500"
+                    className="w-full px-3 py-2 bg-slate-100 dark:bg-slate-855 border border-slate-200/50 dark:border-slate-800 rounded-lg text-sm text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500"
                   />
                 </div>
                 <div>
@@ -183,7 +217,7 @@ export default function Attendance({
                     value={paymentDesc}
                     onChange={(e) => setPaymentDesc(e.target.value)}
                     placeholder="Взнос за тренировки"
-                    className="w-full px-3 py-2 bg-slate-100 dark:bg-slate-850 border border-slate-200/50 dark:border-slate-800 rounded-lg text-sm text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500"
+                    className="w-full px-3 py-2 bg-slate-100 dark:bg-slate-855 border border-slate-200/50 dark:border-slate-800 rounded-lg text-sm text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500"
                   />
                 </div>
                 <button
@@ -197,78 +231,108 @@ export default function Attendance({
             </div>
           )}
 
-          {/* Admin Tools: Create Event */}
+          {/* Admin Tools: Edit player balance manually & Create Event */}
           {isAdmin && (
-            <div className="rounded-2xl glass border border-rose-500/20 dark:border-rose-500/10 p-6 text-left relative overflow-hidden bg-rose-500/[0.02]">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-rose-500/5 rounded-full blur-xl pointer-events-none" />
-              <div className="flex items-center space-x-2 text-rose-500 mb-4">
-                <Shield className="w-4 h-4" />
-                <h3 className="font-extrabold uppercase tracking-wide text-xs">Создать событие (Админ)</h3>
-              </div>
-              <form onSubmit={handleCreateEvent} className="space-y-4">
-                <div>
-                  <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Название</label>
-                  <input
-                    type="text"
-                    value={newEventTitle}
-                    onChange={(e) => setNewEventTitle(e.target.value)}
-                    placeholder="Напр. Тренировка Арена"
-                    required
-                    className="w-full px-3 py-2 bg-slate-100 dark:bg-slate-850 border border-slate-200/50 dark:border-slate-800 rounded-lg text-xs text-slate-800 dark:text-white focus:outline-none"
-                  />
+            <div className="space-y-4">
+              {/* Balance Editor */}
+              <div className="rounded-2xl glass border border-rose-500/20 dark:border-rose-500/10 p-6 text-left relative overflow-hidden bg-rose-500/[0.01]">
+                <div className="flex items-center space-x-2 text-rose-500 mb-4">
+                  <Shield className="w-4 h-4" />
+                  <h3 className="font-extrabold uppercase tracking-wide text-xs">Установить баланс игроку</h3>
                 </div>
-                <div className="grid grid-cols-2 gap-2">
+                <form onSubmit={handleSaveBalance} className="space-y-3">
                   <div>
-                    <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Тип</label>
-                    <select
-                      value={newEventType}
-                      onChange={(e) => setNewEventType(e.target.value)}
-                      className="w-full px-3 py-2 bg-slate-100 dark:bg-slate-850 border border-slate-200/50 dark:border-slate-800 rounded-lg text-xs text-slate-800 dark:text-white focus:outline-none"
-                    >
-                      <option value="training">Тренировка</option>
-                      <option value="match">Матч</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Взнос (₽)</label>
+                    <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">
+                      Стартовый баланс для {activePlayer?.name.split(' ')[0]} (₽)
+                    </label>
                     <input
                       type="number"
-                      value={newEventCost}
-                      onChange={(e) => setNewEventCost(e.target.value)}
+                      value={manualBalanceInput}
+                      onChange={(e) => setManualBalanceInput(e.target.value)}
+                      placeholder={`Текущий: ${initialBal}`}
                       required
-                      className="w-full px-3 py-2 bg-slate-100 dark:bg-slate-850 border border-slate-200/50 dark:border-slate-800 rounded-lg text-xs text-slate-800 dark:text-white focus:outline-none"
+                      className="w-full px-3 py-2 bg-slate-100 dark:bg-slate-855 border border-slate-200/50 dark:border-slate-800 rounded-lg text-xs text-slate-800 dark:text-white focus:outline-none"
                     />
                   </div>
+                  <button
+                    type="submit"
+                    className="w-full py-1.5 bg-rose-500 hover:bg-rose-600 text-white rounded-lg text-xs font-bold transition-all"
+                  >
+                    Применить баланс
+                  </button>
+                </form>
+              </div>
+
+              {/* Create Event */}
+              <div className="rounded-2xl glass border border-rose-500/20 dark:border-rose-500/10 p-6 text-left relative overflow-hidden bg-rose-500/[0.01]">
+                <div className="flex items-center space-x-2 text-rose-500 mb-4">
+                  <Shield className="w-4 h-4" />
+                  <h3 className="font-extrabold uppercase tracking-wide text-xs">Создать событие (Админ)</h3>
                 </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Дата и Время</label>
-                  <input
-                    type="datetime-local"
-                    value={newEventDate}
-                    onChange={(e) => setNewEventDate(e.target.value)}
-                    required
-                    className="w-full px-3 py-2 bg-slate-100 dark:bg-slate-850 border border-slate-200/50 dark:border-slate-800 rounded-lg text-xs text-slate-800 dark:text-white focus:outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Локация</label>
-                  <input
-                    type="text"
-                    value={newEventLocation}
-                    onChange={(e) => setNewEventLocation(e.target.value)}
-                    placeholder="Напр. Локомотив, поле 2"
-                    required
-                    className="w-full px-3 py-2 bg-slate-100 dark:bg-slate-850 border border-slate-200/50 dark:border-slate-800 rounded-lg text-xs text-slate-800 dark:text-white focus:outline-none"
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="w-full py-2 bg-rose-500 hover:bg-rose-600 text-white rounded-lg text-xs font-bold transition-all flex items-center justify-center space-x-1"
-                >
-                  <Plus className="w-3.5 h-3.5" />
-                  <span>Создать</span>
-                </button>
-              </form>
+                <form onSubmit={handleCreateEvent} className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Название</label>
+                    <input
+                      type="text"
+                      value={newEventTitle}
+                      onChange={(e) => setNewEventTitle(e.target.value)}
+                      placeholder="Напр. Тренировка Арена"
+                      required
+                      className="w-full px-3 py-2 bg-slate-100 dark:bg-slate-855 border border-slate-200/50 dark:border-slate-800 rounded-lg text-xs text-slate-800 dark:text-white focus:outline-none"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Тип</label>
+                      <select
+                        value={newEventType}
+                        onChange={(e) => setNewEventType(e.target.value)}
+                        className="w-full px-3 py-2 bg-slate-100 dark:bg-slate-855 border border-slate-200/50 dark:border-slate-800 rounded-lg text-xs text-slate-800 dark:text-white focus:outline-none"
+                      >
+                        <option value="training">Тренировка</option>
+                        <option value="match">Матч</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Списание</label>
+                      <input
+                        type="text"
+                        disabled
+                        value="400 ₽"
+                        className="w-full px-3 py-2 bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-850 rounded-lg text-xs text-slate-500 dark:text-slate-400 font-bold"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Дата и Время</label>
+                    <input
+                      type="datetime-local"
+                      value={newEventDate}
+                      onChange={(e) => setNewEventDate(e.target.value)}
+                      required
+                      className="w-full px-3 py-2 bg-slate-100 dark:bg-slate-855 border border-slate-200/50 dark:border-slate-800 rounded-lg text-xs text-slate-800 dark:text-white focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Локация</label>
+                    <input
+                      type="text"
+                      value={newEventLocation}
+                      onChange={(e) => setNewEventLocation(e.target.value)}
+                      placeholder="Напр. Локомотив, поле 2"
+                      required
+                      className="w-full px-3 py-2 bg-slate-100 dark:bg-slate-855 border border-slate-200/50 dark:border-slate-800 rounded-lg text-xs text-slate-800 dark:text-white focus:outline-none"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="w-full py-2 bg-rose-500 hover:bg-rose-600 text-white rounded-lg text-xs font-bold transition-all flex items-center justify-center space-x-1"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>Создать</span>
+                  </button>
+                </form>
+              </div>
             </div>
           )}
         </div>
@@ -308,13 +372,12 @@ export default function Attendance({
                       </div>
                       <h4 className="font-extrabold text-slate-800 dark:text-slate-150 leading-tight">{event.title}</h4>
                       <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">{event.location}</p>
-                      <p className="text-xs text-emerald-500 dark:text-emerald-450 mt-0.5 font-semibold">Взнос: {event.cost} ₽</p>
+                      <p className="text-xs text-rose-500 mt-0.5 font-bold">Списание с баланса: -400 ₽</p>
                     </div>
 
                     {/* RSVP / Attendance marking actions */}
                     <div className="flex items-center space-x-2 justify-end">
                       {isAdmin ? (
-                        /* Admin Mode: Directly check/uncheck player attendance */
                         <button
                           onClick={() => onToggleAttendance(event.id, selectedPlayerId)}
                           className={`flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all border ${
@@ -327,7 +390,6 @@ export default function Attendance({
                           <span>{event.attendance[selectedPlayerId] ? 'Присутствовал' : 'Отсутствовал'}</span>
                         </button>
                       ) : (
-                        /* Player Mode: Self-attendance toggle (e.g. signup) */
                         <div className="flex items-center space-x-2">
                           <button
                             onClick={() => onToggleAttendance(event.id, selectedPlayerId)}
@@ -362,7 +424,7 @@ export default function Attendance({
                       {isAdmin && (
                         <button
                           onClick={() => onDeleteEvent(event.id)}
-                          className="p-2 bg-slate-100 hover:bg-rose-500/10 dark:bg-slate-850 dark:hover:bg-rose-500/15 text-slate-400 hover:text-rose-500 rounded-xl transition-all"
+                          className="p-2 bg-slate-100 hover:bg-rose-500/10 dark:bg-slate-855 dark:hover:bg-rose-500/15 text-slate-400 hover:text-rose-500 rounded-xl transition-all"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>

@@ -1,8 +1,16 @@
 import React from 'react';
-import { Vote, Users, Shield, Plus, Clock, HelpCircle, Trash2 } from 'lucide-react';
+import { Vote, Users, Shield, Plus, Clock, HelpCircle, Trash2, MessageCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-export default function Polls({ polls, players, isAdmin, onVote, onCreatePoll, onDeletePoll }) {
+export default function Polls({ 
+  polls, 
+  players, 
+  isAdmin, 
+  onVote, 
+  onCreatePoll, 
+  onDeletePoll,
+  currentUser
+}) {
   // Poll creation states
   const [newPollTitle, setNewPollTitle] = React.useState('');
   const [newPollDesc, setNewPollDesc] = React.useState('');
@@ -10,8 +18,7 @@ export default function Polls({ polls, players, isAdmin, onVote, onCreatePoll, o
   const [newPollDeadline, setNewPollDeadline] = React.useState('');
   const [newPollAnonymous, setNewPollAnonymous] = React.useState(false);
 
-  // Active voter mock selector
-  const [voterId, setVoterId] = React.useState(players[0]?.id || '');
+  const activeVoterId = currentUser?.id || null;
 
   const handleAddOption = () => {
     setNewPollOptions([...newPollOptions, '']);
@@ -54,18 +61,19 @@ export default function Polls({ polls, players, isAdmin, onVote, onCreatePoll, o
           <p className="text-slate-500 dark:text-slate-400 mt-1">Опросы, MVP матчей и организационные вопросы</p>
         </div>
 
-        {/* Voter selection */}
+        {/* Auth status display */}
         <div className="mt-4 md:mt-0 flex items-center space-x-2">
-          <label className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase">Голосовать как:</label>
-          <select
-            value={voterId}
-            onChange={(e) => setVoterId(e.target.value)}
-            className="px-3 py-1.5 bg-slate-100 dark:bg-aurora-card/65 border border-slate-200/50 dark:border-slate-800 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 focus:outline-none"
-          >
-            {players.map(p => (
-              <option key={p.id} value={p.id}>{p.name}</option>
-            ))}
-          </select>
+          {currentUser ? (
+            <div className="flex items-center space-x-2 px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-xs font-semibold text-emerald-500">
+              <img src={currentUser.avatar} alt={currentUser.name} className="w-5 h-5 rounded-full object-cover" />
+              <span>Голос игрока: {currentUser.name.split(' ')[0]}</span>
+            </div>
+          ) : (
+            <div className="flex items-center space-x-1.5 px-3 py-1.5 bg-amber-500/10 border border-amber-500/20 text-amber-500 rounded-xl text-xs font-semibold">
+              <MessageCircle className="w-3.5 h-3.5" />
+              <span>Войдите через Telegram</span>
+            </div>
+          )}
         </div>
       </div>
 
@@ -76,7 +84,9 @@ export default function Polls({ polls, players, isAdmin, onVote, onCreatePoll, o
             const totalVotes = poll.options.reduce((sum, o) => sum + o.votes.length, 0);
             
             // Check if active player already voted
-            const userVoteIndex = poll.options.findIndex(o => o.votes.includes(voterId));
+            const userVoteIndex = activeVoterId 
+              ? poll.options.findIndex(o => o.votes.includes(activeVoterId)) 
+              : -1;
             const hasVoted = userVoteIndex !== -1;
 
             const isExpired = new Date(poll.deadline) < new Date();
@@ -115,41 +125,61 @@ export default function Polls({ polls, players, isAdmin, onVote, onCreatePoll, o
                 <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 mb-6">{poll.description}</p>
 
                 {/* Options List */}
-                <div className="space-y-3.5 mb-6">
+                <div className="space-y-4 mb-6">
                   {poll.options.map((option, optIdx) => {
                     const optVotes = option.votes.length;
                     const percent = totalVotes > 0 ? Math.round((optVotes / totalVotes) * 100) : 0;
                     const isSelected = userVoteIndex === optIdx;
 
                     return (
-                      <button
-                        key={optIdx}
-                        disabled={!poll.active || isExpired}
-                        onClick={() => onVote(poll.id, optIdx, voterId)}
-                        className={`w-full relative p-3 rounded-xl border text-left overflow-hidden transition-all group ${
-                          isSelected
-                            ? 'border-emerald-500 bg-emerald-500/5'
-                            : 'border-slate-200 dark:border-slate-800/80 hover:bg-slate-100 dark:hover:bg-slate-850/30'
-                        }`}
-                      >
-                        {/* Progress Bar background animation */}
-                        <div 
-                          className="absolute left-0 top-0 bottom-0 bg-emerald-500/5 dark:bg-emerald-500/10 transition-all duration-500"
-                          style={{ width: `${percent}%` }}
-                        />
+                      <div key={optIdx} className="space-y-1.5">
+                        <button
+                          disabled={!poll.active || isExpired || !activeVoterId}
+                          onClick={() => onVote(poll.id, optIdx, activeVoterId)}
+                          className={`w-full relative p-3 rounded-xl border text-left overflow-hidden transition-all group ${
+                            isSelected
+                              ? 'border-emerald-500 bg-emerald-500/5'
+                              : 'border-slate-200 dark:border-slate-800/80 hover:bg-slate-100 dark:hover:bg-slate-850/30'
+                          } ${!activeVoterId ? 'opacity-70 cursor-not-allowed' : ''}`}
+                        >
+                          {/* Progress Bar */}
+                          <div 
+                            className="absolute left-0 top-0 bottom-0 bg-emerald-500/5 dark:bg-emerald-500/10 transition-all duration-500"
+                            style={{ width: `${percent}%` }}
+                          />
 
-                        {/* Text and stats */}
-                        <div className="relative z-10 flex items-center justify-between">
-                          <span className={`text-sm font-semibold text-slate-800 dark:text-slate-200 group-hover:text-emerald-450 ${
-                            isSelected ? 'text-emerald-500 font-bold' : ''
-                          }`}>
-                            {option.text}
-                          </span>
-                          <span className="text-xs font-black text-slate-500 dark:text-slate-400">
-                            {percent}% ({optVotes})
-                          </span>
-                        </div>
-                      </button>
+                          <div className="relative z-10 flex items-center justify-between">
+                            <span className={`text-sm font-semibold text-slate-800 dark:text-slate-200 group-hover:text-emerald-450 ${
+                              isSelected ? 'text-emerald-500 font-bold' : ''
+                            }`}>
+                              {option.text}
+                            </span>
+                            <span className="text-xs font-black text-slate-500 dark:text-slate-400">
+                              {percent}% ({optVotes})
+                            </span>
+                          </div>
+                        </button>
+
+                        {/* List of Voters (if open poll) */}
+                        {!poll.anonymous && optVotes > 0 && (
+                          <div className="flex flex-wrap items-center gap-1.5 pl-2">
+                            {option.votes.map(voterId => {
+                              const voter = players.find(p => p.id === voterId);
+                              if (!voter) return null;
+                              return (
+                                <div 
+                                  key={voterId} 
+                                  className="flex items-center space-x-1 bg-slate-100 dark:bg-slate-850 px-1.5 py-0.5 rounded-full border border-slate-200 dark:border-slate-800"
+                                  title={voter.name}
+                                >
+                                  <img src={voter.avatar} alt={voter.name} className="w-4.5 h-4.5 rounded-full object-cover" />
+                                  <span className="text-[9px] font-semibold text-slate-500 dark:text-slate-400">{voter.name.split(' ')[0]}</span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
                     );
                   })}
                 </div>
@@ -187,7 +217,7 @@ export default function Polls({ polls, players, isAdmin, onVote, onCreatePoll, o
                   onChange={(e) => setNewPollTitle(e.target.value)}
                   placeholder="Напр. Во сколько сбор?"
                   required
-                  className="w-full px-3 py-2 bg-slate-100 dark:bg-slate-850 border border-slate-200/50 dark:border-slate-800 rounded-lg text-sm text-slate-800 dark:text-white focus:outline-none"
+                  className="w-full px-3 py-2 bg-slate-100 dark:bg-slate-855 border border-slate-200/50 dark:border-slate-800 rounded-lg text-sm text-slate-800 dark:text-white focus:outline-none"
                 />
               </div>
 
@@ -198,7 +228,7 @@ export default function Polls({ polls, players, isAdmin, onVote, onCreatePoll, o
                   onChange={(e) => setNewPollDesc(e.target.value)}
                   placeholder="Дополнительные детали..."
                   rows={2}
-                  className="w-full px-3 py-2 bg-slate-100 dark:bg-slate-850 border border-slate-200/50 dark:border-slate-800 rounded-lg text-sm text-slate-800 dark:text-white focus:outline-none"
+                  className="w-full px-3 py-2 bg-slate-100 dark:bg-slate-855 border border-slate-200/50 dark:border-slate-800 rounded-lg text-sm text-slate-800 dark:text-white focus:outline-none"
                 />
               </div>
 
@@ -213,14 +243,14 @@ export default function Polls({ polls, players, isAdmin, onVote, onCreatePoll, o
                       onChange={(e) => handleOptionChange(idx, e.target.value)}
                       placeholder={`Вариант ${idx + 1}`}
                       required={idx < 2}
-                      className="w-full px-3 py-1.5 bg-slate-100 dark:bg-slate-850 border border-slate-200/50 dark:border-slate-800 rounded-lg text-xs text-slate-800 dark:text-white focus:outline-none"
+                      className="w-full px-3 py-1.5 bg-slate-100 dark:bg-slate-855 border border-slate-200/50 dark:border-slate-800 rounded-lg text-xs text-slate-800 dark:text-white focus:outline-none"
                     />
                   ))}
                 </div>
                 <button
                   type="button"
                   onClick={handleAddOption}
-                  className="mt-2 text-xs font-bold text-emerald-500 hover:text-emerald-605 flex items-center space-x-1"
+                  className="mt-2 text-xs font-bold text-emerald-500 hover:text-emerald-600 flex items-center space-x-1"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>Добавить вариант</span>
@@ -234,7 +264,7 @@ export default function Polls({ polls, players, isAdmin, onVote, onCreatePoll, o
                     type="date"
                     value={newPollDeadline}
                     onChange={(e) => setNewPollDeadline(e.target.value)}
-                    className="w-full px-3 py-1.5 bg-slate-100 dark:bg-slate-850 border border-slate-200/50 dark:border-slate-800 rounded-lg text-xs text-slate-800 dark:text-white focus:outline-none"
+                    className="w-full px-3 py-1.5 bg-slate-100 dark:bg-slate-855 border border-slate-200/50 dark:border-slate-800 rounded-lg text-xs text-slate-800 dark:text-white focus:outline-none"
                   />
                 </div>
                 <div className="flex items-center justify-end mt-4">

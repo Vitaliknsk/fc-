@@ -1,14 +1,12 @@
 import React from 'react';
-import { ArrowUp, ArrowDown, ArrowRight, ShieldCheck, Target, Award, Star, Heart } from 'lucide-react';
+import { ArrowUp, ArrowDown, ArrowRight, Target, Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function Leaderboard({ players }) {
-  const [metric, setMetric] = React.useState('goals'); // goals, assists, points, mvp, matches
+  const [metric, setMetric] = React.useState('goals'); // goals, mvp
 
   const metrics = [
     { id: 'goals', label: 'Голы', icon: Target, color: 'text-emerald-500 bg-emerald-500/10' },
-    { id: 'assists', label: 'Ассисты', icon: Award, color: 'text-teal-500 bg-teal-500/10' },
-    { id: 'points', label: 'Гол + Пас', icon: Star, color: 'text-indigo-500 bg-indigo-500/10' },
     { id: 'mvp', label: 'MVP матчей', icon: Heart, color: 'text-rose-500 bg-rose-500/10' },
   ];
 
@@ -17,10 +15,6 @@ export default function Leaderboard({ players }) {
     switch (metricId) {
       case 'goals':
         return player.stats.goals;
-      case 'assists':
-        return player.stats.assists;
-      case 'points':
-        return player.stats.goals + player.stats.assists;
       case 'mvp':
         return player.stats.mvp;
       default:
@@ -71,8 +65,8 @@ export default function Leaderboard({ players }) {
         <p className="text-slate-500 dark:text-slate-400 mt-1">Рейтинг игроков команды в реальном времени</p>
       </div>
 
-      {/* Tabs */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-8">
+      {/* Tabs (Only Goals and MVP) */}
+      <div className="grid grid-cols-2 gap-3 max-w-md mx-auto md:mx-0 mb-8">
         {metrics.map((item) => {
           const Icon = item.icon;
           return (
@@ -126,7 +120,7 @@ export default function Leaderboard({ players }) {
                   <img
                     src={player.avatar}
                     alt={player.name}
-                    className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-850"
+                    className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-855"
                   />
 
                   {/* Name and progress bar container */}
@@ -141,7 +135,7 @@ export default function Leaderboard({ players }) {
                     </div>
 
                     {/* Progress Bar background */}
-                    <div className="w-full h-1.5 bg-slate-200 dark:bg-slate-850 rounded-full overflow-hidden">
+                    <div className="w-full h-1.5 bg-slate-200 dark:bg-slate-855 rounded-full overflow-hidden">
                       <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${percent}%` }}

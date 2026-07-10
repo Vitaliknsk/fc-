@@ -1,8 +1,19 @@
 import React from 'react';
-import { Sun, Moon, Shield, Menu, X, Trophy } from 'lucide-react';
+import { Sun, Moon, Shield, Menu, X, Trophy, MessageSquare, LogOut, Check } from 'lucide-react';
 
-export default function Navbar({ activeTab, setActiveTab, darkMode, setDarkMode, isAdmin, setIsAdmin }) {
+export default function Navbar({ 
+  activeTab, 
+  setActiveTab, 
+  darkMode, 
+  setDarkMode, 
+  isAdmin, 
+  setIsAdmin,
+  players,
+  currentUser,
+  setCurrentUser
+}) {
   const [isOpen, setIsOpen] = React.useState(false);
+  const [showLoginModal, setShowLoginModal] = React.useState(false);
 
   const navItems = [
     { id: 'home', label: 'Главная' },
@@ -14,6 +25,11 @@ export default function Navbar({ activeTab, setActiveTab, darkMode, setDarkMode,
     { id: 'about', label: 'О клубе' },
   ];
 
+  const handleSelectUser = (player) => {
+    setCurrentUser(player);
+    setShowLoginModal(false);
+  };
+
   return (
     <nav className="sticky top-0 z-50 glass border-b border-slate-200/50 dark:border-slate-800/40 w-full transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -22,7 +38,6 @@ export default function Navbar({ activeTab, setActiveTab, darkMode, setDarkMode,
           <div className="flex items-center cursor-pointer" onClick={() => setActiveTab('home')}>
             <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-indigo-600 shadow-[0_0_15px_rgba(16,185,129,0.3)] mr-3 overflow-hidden">
               <Trophy className="w-5 h-5 text-white animate-pulse" />
-              <div className="absolute inset-0 bg-white/10 opacity-0 hover:opacity-100 transition-opacity" />
             </div>
             <span className="font-extrabold text-xl tracking-tight bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-400 bg-clip-text text-transparent uppercase">
               ФК АВРОРА
@@ -48,6 +63,29 @@ export default function Navbar({ activeTab, setActiveTab, darkMode, setDarkMode,
 
           {/* Action Buttons */}
           <div className="hidden lg:flex items-center space-x-3">
+            {/* Telegram Auth Simulated Button */}
+            {currentUser ? (
+              <div className="flex items-center space-x-2 bg-slate-100 dark:bg-slate-850 border border-slate-200 dark:border-slate-800 px-3 py-1 rounded-xl">
+                <img src={currentUser.avatar} alt={currentUser.name} className="w-6 h-6 rounded-full object-cover border border-emerald-500/50" />
+                <span className="text-xs font-semibold text-slate-700 dark:text-slate-200 truncate max-w-[100px]">{currentUser.name.split(' ')[0]}</span>
+                <button 
+                  onClick={() => setCurrentUser(null)} 
+                  className="text-slate-400 hover:text-rose-500 transition-colors ml-1"
+                  title="Выйти"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setShowLoginModal(true)}
+                className="flex items-center space-x-1 px-3 py-1.5 bg-sky-500 hover:bg-sky-600 text-white rounded-xl text-xs font-semibold transition-all hover:scale-105"
+              >
+                <MessageCircle className="w-3.5 h-3.5 fill-current" />
+                <span>Войти через TG</span>
+              </button>
+            )}
+
             {/* Admin Toggle */}
             <button
               onClick={() => setIsAdmin(!isAdmin)}
@@ -71,9 +109,18 @@ export default function Navbar({ activeTab, setActiveTab, darkMode, setDarkMode,
             </button>
           </div>
 
-          {/* Mobile menu button */}
+          {/* Mobile Menu Action */}
           <div className="flex lg:hidden items-center space-x-2">
-            {/* Admin Toggle Mobile */}
+            {currentUser ? (
+              <button onClick={() => setCurrentUser(null)} className="p-1.5 bg-slate-100 dark:bg-slate-850 rounded-lg text-slate-500">
+                <LogOut className="w-4 h-4 text-rose-500" />
+              </button>
+            ) : (
+              <button onClick={() => setShowLoginModal(true)} className="p-1.5 bg-sky-500 text-white rounded-lg">
+                <MessageCircle className="w-4 h-4 fill-current" />
+              </button>
+            )}
+
             <button
               onClick={() => setIsAdmin(!isAdmin)}
               className={`p-1.5 rounded-lg border ${
@@ -81,14 +128,6 @@ export default function Navbar({ activeTab, setActiveTab, darkMode, setDarkMode,
               }`}
             >
               <Shield className="w-4 h-4" />
-            </button>
-            
-            {/* Theme Toggle Mobile */}
-            <button
-              onClick={() => setDarkMode(!darkMode)}
-              className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400"
-            >
-              {darkMode ? <Sun className="w-4 h-4 text-yellow-400" /> : <Moon className="w-4 h-4" />}
             </button>
 
             <button
@@ -120,6 +159,47 @@ export default function Navbar({ activeTab, setActiveTab, darkMode, setDarkMode,
               {item.label}
             </button>
           ))}
+        </div>
+      )}
+
+      {/* Telegram login Modal Simulator */}
+      {showLoginModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm">
+          <div className="bg-white dark:bg-aurora-card max-w-sm w-full rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-2xl relative">
+            <button 
+              onClick={() => setShowLoginModal(false)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-200 text-sm font-bold"
+            >
+              ✕
+            </button>
+            <div className="flex items-center space-x-2 text-sky-500 mb-4">
+              <MessageCircle className="w-6 h-6 fill-current" />
+              <h3 className="text-lg font-black dark:text-white">Авторизация Telegram</h3>
+            </div>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-4 text-left">
+              Выберите игрока из состава ФК Аврора для симуляции входа через Telegram виджет.
+            </p>
+            <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
+              {players.map(p => (
+                <button
+                  key={p.id}
+                  onClick={() => handleSelectUser(p)}
+                  className="w-full flex items-center justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-150 dark:border-slate-800 hover:border-sky-500 transition-all text-left"
+                >
+                  <div className="flex items-center space-x-2.5">
+                    <img src={p.avatar} alt={p.name} className="w-8 h-8 rounded-full object-cover" />
+                    <div>
+                      <p className="text-xs font-bold text-slate-800 dark:text-slate-150">{p.name}</p>
+                      <p className="text-[10px] text-slate-450 dark:text-slate-500">{p.position}</p>
+                    </div>
+                  </div>
+                  {currentUser?.id === p.id && (
+                    <Check className="w-4 h-4 text-emerald-500" />
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       )}
     </nav>
