@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 export default function Roster({ players }) {
   const [filter, setFilter] = React.useState('Все');
 
-  const positions = ['Все', 'Вратарь', 'Защитник', 'Полузащитник', 'Нападающий'];
+  const positions = ['Все', ...new Set(players.map(player => player.position))];
 
   const filteredPlayers = filter === 'Все' 
     ? players 
@@ -105,8 +105,8 @@ export default function Roster({ players }) {
                   <Award className="w-3.5 h-3.5" />
                 </div>
                 <div>
-                  <p className="text-[10px] text-slate-400 dark:text-slate-500 font-semibold uppercase">Пасы</p>
-                  <p className="text-sm font-bold text-slate-800 dark:text-slate-100">{player.stats.assists}</p>
+                  <p className="text-[10px] text-slate-400 dark:text-slate-500 font-semibold uppercase">Победы</p>
+                  <p className="text-sm font-bold text-slate-800 dark:text-slate-100">{player.stats.wins}</p>
                 </div>
               </div>
 
@@ -115,8 +115,8 @@ export default function Roster({ players }) {
                   <Clock className="w-3.5 h-3.5" />
                 </div>
                 <div>
-                  <p className="text-[10px] text-slate-400 dark:text-slate-500 font-semibold uppercase">Минуты</p>
-                  <p className="text-sm font-bold text-slate-800 dark:text-slate-100">{player.stats.minutes}'</p>
+                  <p className="text-[10px] text-slate-400 dark:text-slate-500 font-semibold uppercase">Голов/матч</p>
+                  <p className="text-sm font-bold text-slate-800 dark:text-slate-100">{player.stats.goalsPerMatch}</p>
                 </div>
               </div>
             </div>

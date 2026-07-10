@@ -3,9 +3,9 @@ import { Send, SendHorizontal, MessageSquare, Info, Star } from 'lucide-react';
 
 export default function Chat({ players }) {
   const [messages, setMessages] = React.useState([
-    { id: 1, senderName: "Александр Морозов", senderAvatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80", text: "Привет всем! В среду тренировка в силе?", time: "18:24", self: false },
-    { id: 2, senderName: "Дмитрий Смирнов", senderAvatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80", text: "Привет! Да, капитан сказал собираемся в 19:30. Поле забронировано.", time: "18:26", self: false },
-    { id: 3, senderName: "Илья Васильев", senderAvatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&auto=format&fit=crop&q=80", text: "Я буду. Форму берем зеленую или белую?", time: "18:30", self: false },
+    { id: 1, senderName: "Виталя Реутов", senderAvatar: "https://api.dicebear.com/9.x/initials/svg?seed=%D0%92%D0%B8%D1%82%D0%B0%D0%BB%D1%8F%20%D0%A0%D0%B5%D1%83%D1%82%D0%BE%D0%B2", text: "Привет всем! В среду тренировка в силе?", time: "18:24", self: false },
+    { id: 2, senderName: "Женька Павлюк", senderAvatar: "https://api.dicebear.com/9.x/initials/svg?seed=%D0%96%D0%B5%D0%BD%D1%8C%D0%BA%D0%B0%20%D0%9F%D0%B0%D0%B2%D0%BB%D1%8E%D0%BA", text: "Привет! Да, капитан сказал собираемся в 19:30. Поле забронировано.", time: "18:26", self: false },
+    { id: 3, senderName: "Юра Лобода", senderAvatar: "https://api.dicebear.com/9.x/initials/svg?seed=%D0%AE%D1%80%D0%B0%20%D0%9B%D0%BE%D0%B1%D0%BE%D0%B4%D0%B0", text: "Я буду. Форму берем зеленую или белую?", time: "18:30", self: false },
     { id: 4, senderName: "Капитан", senderAvatar: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=150&auto=format&fit=crop&q=80", text: "Берем зеленую! И не забывайте сдавать взносы за прошлый матч.", time: "18:32", self: false },
   ]);
 
@@ -21,7 +21,7 @@ export default function Chat({ players }) {
       ...messages,
       {
         id: Date.now(),
-        senderName: activePlayer?.name || "Александр Морозов",
+        senderName: activePlayer?.name || "Виталя Реутов",
         senderAvatar: activePlayer?.avatar || "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80",
         text: inputVal,
         time: new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }),

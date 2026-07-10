@@ -3,11 +3,11 @@ import { ArrowUp, ArrowDown, ArrowRight, Target, Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function Leaderboard({ players }) {
-  const [metric, setMetric] = React.useState('goals'); // goals, mvp
+  const [metric, setMetric] = React.useState('goals');
 
   const metrics = [
     { id: 'goals', label: 'Голы', icon: Target, color: 'text-emerald-500 bg-emerald-500/10' },
-    { id: 'mvp', label: 'MVP матчей', icon: Heart, color: 'text-rose-500 bg-rose-500/10' },
+    { id: 'wins', label: 'Победы', icon: Heart, color: 'text-rose-500 bg-rose-500/10' },
   ];
 
   // Calculate values based on selected metric
@@ -15,8 +15,8 @@ export default function Leaderboard({ players }) {
     switch (metricId) {
       case 'goals':
         return player.stats.goals;
-      case 'mvp':
-        return player.stats.mvp;
+      case 'wins':
+        return player.stats.wins;
       default:
         return 0;
     }

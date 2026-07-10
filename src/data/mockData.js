@@ -1,192 +1,43 @@
 // Начальные данные для ГЛМФ
 
 export const initialPlayers = [
-  {
-    id: "p1",
-    name: "Александр Морозов",
-    number: 10,
-    position: "Нападающий",
-    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80",
-    initialBalance: 1500, // Начальный баланс в рублях
-    stats: {
-      goals: 12,
-      assists: 8,
-      matchesPlayed: 14,
-      minutes: 1120,
-      mvp: 4,
-      yellowCards: 1,
-      redCards: 0
-    },
-    rankChanges: {
-      goals: "up", // up, down, flat
-      assists: "flat",
-      points: "up",
-      attendance: "flat"
-    }
-  },
-  {
-    id: "p2",
-    name: "Дмитрий Смирнов",
-    number: 7,
-    position: "Полузащитник",
-    avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80",
-    initialBalance: 800,
-    stats: {
-      goals: 8,
-      assists: 11,
-      matchesPlayed: 15,
-      minutes: 1250,
-      mvp: 3,
-      yellowCards: 2,
-      redCards: 0
-    },
-    rankChanges: {
-      goals: "flat",
-      assists: "up",
-      points: "up",
-      attendance: "up"
-    }
-  },
-  {
-    id: "p3",
-    name: "Максим Соколов",
-    number: 9,
-    position: "Нападающий",
-    avatar: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=150&auto=format&fit=crop&q=80",
-    initialBalance: -200, // Пример долга
-    stats: {
-      goals: 10,
-      assists: 3,
-      matchesPlayed: 12,
-      minutes: 980,
-      mvp: 2,
-      yellowCards: 0,
-      redCards: 0
-    },
-    rankChanges: {
-      goals: "down",
-      assists: "down",
-      points: "down",
-      attendance: "down"
-    }
-  },
-  {
-    id: "p4",
-    name: "Артем Кузнецов",
-    number: 8,
-    position: "Полузащитник",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
-    initialBalance: 2000,
-    stats: {
-      goals: 4,
-      assists: 7,
-      matchesPlayed: 15,
-      minutes: 1300,
-      mvp: 1,
-      yellowCards: 3,
-      redCards: 0
-    },
-    rankChanges: {
-      goals: "up",
-      assists: "flat",
-      points: "flat",
-      attendance: "up"
-    }
-  },
-  {
-    id: "p5",
-    name: "Роман Петров",
-    number: 4,
-    position: "Защитник",
-    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80",
-    initialBalance: 1200,
-    stats: {
-      goals: 2,
-      assists: 3,
-      matchesPlayed: 15,
-      minutes: 1350,
-      mvp: 2,
-      yellowCards: 4,
-      redCards: 1
-    },
-    rankChanges: {
-      goals: "flat",
-      assists: "up",
-      points: "flat",
-      attendance: "up"
-    }
-  },
-  {
-    id: "p6",
-    name: "Кирилл Иванов",
-    number: 5,
-    position: "Защитник",
-    avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&auto=format&fit=crop&q=80",
-    initialBalance: -800, // Пример долга
-    stats: {
-      goals: 1,
-      assists: 2,
-      matchesPlayed: 13,
-      minutes: 1100,
-      mvp: 0,
-      yellowCards: 5,
-      redCards: 0
-    },
-    rankChanges: {
-      goals: "down",
-      assists: "flat",
-      points: "down",
-      attendance: "down"
-    }
-  },
-  {
-    id: "p7",
-    name: "Илья Васильев",
-    number: 1,
-    position: "Вратарь",
-    avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&auto=format&fit=crop&q=80",
-    initialBalance: 500,
-    stats: {
-      goals: 0,
-      assists: 1,
-      matchesPlayed: 16,
-      minutes: 1440,
-      mvp: 2,
-      yellowCards: 0,
-      redCards: 0
-    },
-    rankChanges: {
-      goals: "flat",
-      assists: "flat",
-      points: "flat",
-      attendance: "up"
-    }
-  },
-  {
-    id: "p8",
-    name: "Сергей Федоров",
-    number: 17,
-    position: "Полузащитник",
-    avatar: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=150&auto=format&fit=crop&q=80",
-    initialBalance: 0,
-    stats: {
-      goals: 5,
-      assists: 4,
-      matchesPlayed: 10,
-      minutes: 680,
-      mvp: 1,
-      yellowCards: 1,
-      redCards: 0
-    },
-    rankChanges: {
-      goals: "up",
-      assists: "up",
-      points: "up",
-      attendance: "flat"
-    }
-  }
-];
-
+  ["Виталя Реутов", 47, 7, 2, 29, 0, 0, 6.7, 16],
+  ["Женька Павлюк", 46, 7, 6, 86, 0, 0, 6.5, 10],
+  ["Юра Лобода", 37, 7, 5, 71, 0, 0, 5.2, 10],
+  ["Виталя Бирюков", 30, 9, 7, 78, 1, 0, 3.3, 7],
+  ["Валера", 25, 9, 5, 56, 0, 0, 2.7, 6],
+  ["Александер", 24, 9, 6, 67, 1, 0, 2.6, 6],
+  ["Саша Высоцкий", 19, 9, 5, 56, 1, 0, 2.1, 5],
+  ["Жека Парахневич", 19, 6, 2, 33, 0, 0, 3.1, 5],
+  ["Илюха Гляненко", 16, 6, 2, 33, 0, 0, 2.6, 6],
+  ["Костян", 14, 7, 3, 43, 0, 1, 2, 4],
+  ["Рома Павлюк", 14, 6, 2, 33, 0, 1, 2.3, 7],
+  ["Андрюха Колчак", 11, 6, 3, 50, 0, 0, 1.8, 7],
+  ["Саня Чуба", 11, 5, 4, 80, 1, 0, 2.2, 4],
+  ["Леха 20 лет футбола", 10, 2, 0, 0, 0, 1, 5, 6],
+  ["Кузя", 9, 7, 3, 43, 0, 0, 1.2, 3],
+  ["Игорь", 8, 2, 1, 50, 0, 0, 4, 5],
+  ["Артём", 7, 4, 0, 0, 2, 0, 1.7, 3],
+  ["Алыча", 4, 1, 1, 100, 0, 0, 4, 4],
+  ["Гена", 3, 2, 1, 50, 0, 0, 1.5, 3],
+  ["Гога", 2, 4, 1, 25, 0, 1, 0.5, 2],
+  ["Муля Кирилл", 2, 2, 0, 0, 0, 0, 1, 1],
+  ["Джамал", 2, 2, 2, 100, 0, 0, 1, 2],
+  ["Женя Ухо", 1, 2, 1, 50, 0, 0, 0.5, 1],
+  ["Никита Обухов", 1, 1, 0, 0, 0, 0, 1, 1],
+  ["Саня Вареный", 1, 1, 0, 0, 0, 0, 1, 1],
+  ["Саня Брат Игоря", 1, 1, 1, 100, 0, 0, 1, 1],
+  ["Витя Матвеев", 0, 1, 0, 0, 0, 0, 0, 0],
+].map(([name, goals, matchesPlayed, wins, winRate, ownGoals, redCards, goalsPerMatch, maxGoals], index) => ({
+  id: `p${index + 1}`,
+  name,
+  number: index + 1,
+  position: "Игрок",
+  avatar: `https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(name)}&backgroundColor=0f766e,0e7490,1e3a8a`,
+  initialBalance: 0,
+  stats: { goals, matchesPlayed, wins, winRate, ownGoals, redCards, goalsPerMatch, maxGoals, assists: 0, minutes: matchesPlayed * 60, mvp: 0, yellowCards: 0 },
+  rankChanges: { goals: "flat", assists: "flat", points: "flat", attendance: "flat" },
+}));
 export const initialEvents = [
   {
     id: "ev1",
@@ -281,9 +132,9 @@ export const initialPolls = [
     title: "Лучший игрок матча против ФК Вымпел",
     description: "Голосуем за лучшего игрока прошедшей игры. Наша победа 3:1!",
     options: [
-      { text: "Александр Морозов (1 гол, 1 ассист)", votes: ["p2", "p4", "p5", "p7"] },
-      { text: "Дмитрий Смирнов (2 ассиста)", votes: ["p1", "p3", "p8"] },
-      { text: "Илья Васильев (серия сейвов)", votes: ["p6"] }
+      { text: "Виталя Реутов", votes: ["p2", "p4", "p5", "p7"] },
+      { text: "Женька Павлюк", votes: ["p1", "p3", "p8"] },
+      { text: "Юра Лобода", votes: ["p6"] }
     ],
     deadline: "2026-07-10T23:59:59",
     anonymous: false,
@@ -323,7 +174,7 @@ export const initialNews = [
     id: "n1",
     title: "Уверенная победа над ФК Вымпел 3:1!",
     summary: "В напряженном матче 14-го тура наша команда завоевала важнейшие три очка.",
-    content: "ГЛМФ провела одну из лучших игр в этом сезоне. С самого начала матча мы захватили инициативу. На 12-й минуте Александр Морозов открыл счет красивым ударом в девятку после паса Дмитрия Смирнова. Во втором тайме соперник сравнял счет с пенальти, но дубль Максима Соколова принес нам заслуженную победу. Спасибо болельщикам за поддержку!",
+    content: "ГЛМФ провела одну из лучших игр в этом сезоне. С самого начала матча команда захватила инициативу, а во втором тайме закрепила преимущество. Спасибо игрокам и болельщикам за поддержку!",
     date: "2026-06-28",
     image: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=600&auto=format&fit=crop&q=80"
   },
@@ -338,10 +189,10 @@ export const initialNews = [
 ];
 
 export const initialMatches = [
-  { id: "m1", opponent: "ФК Вымпел", date: "2026-06-28T10:00:00", type: "Чемпионат ЛФЛ", score: "3:1", status: "completed", home: true, ourGoals: "Морозов 12', Соколов 64', 78'" },
+  { id: "m1", opponent: "ФК Вымпел", date: "2026-06-28T10:00:00", type: "Чемпионат ЛФЛ", score: "3:1", status: "completed", home: true, ourGoals: "ГЛМФ — 3 гола" },
   { id: "m2", opponent: "ФК Штурм", date: "2026-07-12T11:00:00", type: "Чемпионат ЛФЛ", score: null, status: "upcoming", home: false, ourGoals: null },
   { id: "m3", opponent: "ФК Прогресс", date: "2026-07-19T10:00:00", type: "Чемпионат ЛФЛ", score: null, status: "upcoming", home: true, ourGoals: null },
-  { id: "m4", opponent: "ФК Легион", date: "2026-06-21T12:30:00", type: "Товарищеский", score: "2:2", status: "completed", home: false, ourGoals: "Смирнов 34', Федоров 81'" }
+  { id: "m4", opponent: "ФК Легион", date: "2026-06-21T12:30:00", type: "Товарищеский", score: "2:2", status: "completed", home: false, ourGoals: "ГЛМФ — 2 гола" }
 ];
 
 export const teamAboutInfo = {

@@ -20,6 +20,7 @@ import {
 } from './data/mockData';
 
 export default function App() {
+  const rosterVersion = 'glmfr-roster-2026-07';
   // Tabs & Settings State
   const [activeTab, setActiveTab] = React.useState('home');
   const [darkMode, setDarkMode] = React.useState(true);
@@ -40,7 +41,8 @@ export default function App() {
   const [players, setPlayers] = React.useState(() => {
     try {
       const saved = localStorage.getItem('fc_players');
-      return saved ? JSON.parse(saved) : initialPlayers;
+      const savedVersion = localStorage.getItem('fc_rosterVersion');
+      return saved && savedVersion === rosterVersion ? JSON.parse(saved) : initialPlayers;
     } catch (e) {
       return initialPlayers;
     }
@@ -67,7 +69,8 @@ export default function App() {
   const [polls, setPolls] = React.useState(() => {
     try {
       const saved = localStorage.getItem('fc_polls');
-      return saved ? JSON.parse(saved) : initialPolls;
+      const savedVersion = localStorage.getItem('fc_rosterVersion');
+      return saved && savedVersion === rosterVersion ? JSON.parse(saved) : initialPolls;
     } catch (e) {
       return initialPolls;
     }
@@ -82,6 +85,7 @@ export default function App() {
   // Sync state changes with localStorage
   React.useEffect(() => {
     localStorage.setItem('fc_players', JSON.stringify(players));
+    localStorage.setItem('fc_rosterVersion', rosterVersion);
     // If current user details change, sync it too
     if (currentUser) {
       const updatedUser = players.find(p => p.id === currentUser.id);
@@ -89,7 +93,7 @@ export default function App() {
         setCurrentUser(updatedUser);
       }
     }
-  }, [players]);
+  }, [players, rosterVersion]);
 
   React.useEffect(() => {
     if (currentUser) {
