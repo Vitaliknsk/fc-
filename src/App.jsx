@@ -27,29 +27,50 @@ export default function App() {
   
   // Telegram Session State
   const [currentUser, setCurrentUser] = React.useState(() => {
-    const saved = localStorage.getItem('fc_currentUser');
-    return saved ? JSON.parse(saved) : null;
+    try {
+      const saved = localStorage.getItem('fc_currentUser');
+      return (saved && saved !== 'undefined') ? JSON.parse(saved) : null;
+    } catch (e) {
+      localStorage.removeItem('fc_currentUser');
+      return null;
+    }
   });
 
   // Core Data States (synchronized with localStorage)
   const [players, setPlayers] = React.useState(() => {
-    const saved = localStorage.getItem('fc_players');
-    return saved ? JSON.parse(saved) : initialPlayers;
+    try {
+      const saved = localStorage.getItem('fc_players');
+      return saved ? JSON.parse(saved) : initialPlayers;
+    } catch (e) {
+      return initialPlayers;
+    }
   });
 
   const [events, setEvents] = React.useState(() => {
-    const saved = localStorage.getItem('fc_events');
-    return saved ? JSON.parse(saved) : initialEvents;
+    try {
+      const saved = localStorage.getItem('fc_events');
+      return saved ? JSON.parse(saved) : initialEvents;
+    } catch (e) {
+      return initialEvents;
+    }
   });
 
   const [payments, setPayments] = React.useState(() => {
-    const saved = localStorage.getItem('fc_payments');
-    return saved ? JSON.parse(saved) : initialPayments;
+    try {
+      const saved = localStorage.getItem('fc_payments');
+      return saved ? JSON.parse(saved) : initialPayments;
+    } catch (e) {
+      return initialPayments;
+    }
   });
 
   const [polls, setPolls] = React.useState(() => {
-    const saved = localStorage.getItem('fc_polls');
-    return saved ? JSON.parse(saved) : initialPolls;
+    try {
+      const saved = localStorage.getItem('fc_polls');
+      return saved ? JSON.parse(saved) : initialPolls;
+    } catch (e) {
+      return initialPolls;
+    }
   });
 
   const [news] = React.useState(initialNews);
@@ -71,7 +92,11 @@ export default function App() {
   }, [players]);
 
   React.useEffect(() => {
-    localStorage.setItem('fc_currentUser', currentUser ? JSON.stringify(currentUser) : '');
+    if (currentUser) {
+      localStorage.setItem('fc_currentUser', JSON.stringify(currentUser));
+    } else {
+      localStorage.removeItem('fc_currentUser');
+    }
   }, [currentUser]);
 
   React.useEffect(() => {
