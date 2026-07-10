@@ -55,9 +55,9 @@ export default function Hero({ setActiveTab, nextEvent, onRsvp, players, matches
                 transition={{ duration: 0.5, delay: 0.1 }}
                 className="font-display text-3xl sm:text-5xl font-bold tracking-[-0.055em] mb-5 leading-[1.1]"
               >
-                Футбольный Клуб <br/>
+                Команда <br/>
                 <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-400 bg-clip-text text-transparent drop-shadow-sm">
-                  АВРОРА
+                  ГЛМФ
                 </span>
               </motion.h1>
               
@@ -67,7 +67,7 @@ export default function Hero({ setActiveTab, nextEvent, onRsvp, players, matches
                 transition={{ duration: 0.5, delay: 0.2 }}
                 className="text-slate-600 dark:text-slate-300 max-w-xl text-base sm:text-lg leading-relaxed mb-8"
               >
-                Официальный портал футбольной команды Аврора. Статистика, расписание тренировок и матчей, система учета взносов и интерактивные голосования в одном месте.
+                Официальный портал футбольной команды ГЛМФ. Статистика, расписание тренировок и матчей, система учета взносов и интерактивные голосования в одном месте.
               </motion.p>
               
               <motion.div 

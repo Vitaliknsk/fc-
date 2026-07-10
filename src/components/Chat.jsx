@@ -39,7 +39,7 @@ export default function Chat({ players }) {
         <div>
           <h4 className="font-extrabold text-sm text-slate-800 dark:text-slate-100">Интеграция с Telegram</h4>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Этот чат симулирует интеграцию с основным Telegram-каналом ФК Аврора. Сообщения, отправленные ботом клуба, автоматически ретранслируются на сайт.
+            Этот чат симулирует интеграцию с основным Telegram-каналом ГЛМФ. Сообщения, отправленные ботом клуба, автоматически ретранслируются на сайт.
           </p>
         </div>
       </div>

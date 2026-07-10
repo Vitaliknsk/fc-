@@ -40,7 +40,7 @@ export default function Navbar({
               <Trophy className="w-5 h-5 text-white animate-pulse" />
             </div>
             <span className="font-display font-semibold text-base tracking-[-0.055em] bg-gradient-to-r from-emerald-500 via-teal-400 to-sky-500 bg-clip-text text-transparent uppercase">
-              ФК АВРОРА
+              ГЛМФ
             </span>
           </div>
 
@@ -177,7 +177,7 @@ export default function Navbar({
               <h3 className="text-lg font-black dark:text-white">Авторизация Telegram</h3>
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-400 mb-4 text-left">
-              Выберите игрока из состава ФК Аврора для симуляции входа через Telegram виджет.
+              Выберите игрока из состава ГЛМФ для симуляции входа через Telegram виджет.
             </p>
             <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
               {players.map(p => (

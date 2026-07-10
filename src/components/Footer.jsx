@@ -12,7 +12,7 @@ export default function Footer() {
               <Trophy className="w-4 h-4" />
             </div>
             <div>
-              <p className="font-extrabold text-slate-800 dark:text-slate-200 text-sm tracking-wide">ФК АВРОРА</p>
+              <p className="font-extrabold text-slate-800 dark:text-slate-200 text-sm tracking-wide">ГЛМФ</p>
               <p className="text-[10px] text-slate-400">Любительский Футбольный Клуб © {new Date().getFullYear()}</p>
             </div>
           </div>

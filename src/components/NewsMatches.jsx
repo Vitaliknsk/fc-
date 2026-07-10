@@ -12,7 +12,7 @@ export default function NewsMatches({ news, matches }) {
       {/* Page Title */}
       <div className="text-left mb-8">
         <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white">Календарь и Новости</h2>
-        <p className="text-slate-500 dark:text-slate-400 mt-1">Официальные новости ФК Аврора и расписание матчей лиги</p>
+        <p className="text-slate-500 dark:text-slate-400 mt-1">Официальные новости ГЛМФ и расписание матчей лиги</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -50,11 +50,11 @@ export default function NewsMatches({ news, matches }) {
                     <div className="flex items-center justify-between mb-3">
                       <div>
                         <p className="font-extrabold text-slate-800 dark:text-white text-base leading-tight">
-                          {match.home ? 'Аврора' : match.opponent}
+                          {match.home ? 'ГЛМФ' : match.opponent}
                         </p>
                         <p className="text-xs text-slate-400 mt-0.5 font-medium">против</p>
                         <p className="font-extrabold text-slate-800 dark:text-white text-base leading-tight">
-                          {match.home ? match.opponent : 'Аврора'}
+                          {match.home ? match.opponent : 'ГЛМФ'}
                         </p>
                       </div>
 

@@ -9,7 +9,7 @@ export default function About() {
       {/* Header */}
       <div className="text-left mb-8">
         <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white">О Команде</h2>
-        <p className="text-slate-500 dark:text-slate-400 mt-1">История ФК Аврора и наши достижения</p>
+        <p className="text-slate-500 dark:text-slate-400 mt-1">История ГЛМФ и наши достижения</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 text-left">

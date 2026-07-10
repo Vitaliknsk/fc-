@@ -17,7 +17,7 @@ export default function Roster({ players }) {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
         <div>
           <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white">Состав Команды</h2>
-          <p className="text-slate-500 dark:text-slate-400 mt-1">Игроки ФК Аврора на сезон 2026</p>
+          <p className="text-slate-500 dark:text-slate-400 mt-1">Игроки ГЛМФ на сезон 2026</p>
         </div>
         
         {/* Horizontal filters */}
